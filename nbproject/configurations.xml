@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="84">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df name="libxemit" root=".">
+      <df name="build">
+        <in>xemitops.d</in>
+      </df>
+      <df name="gen">
+        <df name="compiled">
+        </df>
+      </df>
+      <df name="rshadercompiler">
+        <df name="rshadercompiler">
+          <df name="bin">
+            <df name="x86">
+              <df name="Debug">
+              </df>
+              <df name="Release">
+              </df>
+            </df>
+          </df>
+          <df name="Content">
+            <df name="bin">
+              <df name="x86">
+                <df name="Debug">
+                </df>
+                <df name="Release">
+                </df>
+              </df>
+            </df>
+            <df name="obj">
+              <df name="x86">
+                <df name="Debug">
+                  <df name="TempPE">
+                  </df>
+                </df>
+                <df name="Release">
+                  <df name="TempPE">
+                  </df>
+                </df>
+              </df>
+            </df>
+          </df>
+          <df name="obj">
+            <df name="x86">
+              <df name="Debug">
+                <df name="TempPE">
+                </df>
+              </df>
+              <df name="Release">
+                <df name="TempPE">
+                </df>
+              </df>
+            </df>
+          </df>
+          <df name="Properties">
+          </df>
+        </df>
+      </df>
+      <in>xemitops.c</in>
+      <in>xemitops.h</in>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile-libxemit.mk</itemPath>
+      <itemPath>makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile-libxemit.mk</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+      </toolsSet>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath></executablePath>
+        </makeTool>
+      </makefileType>
+    </conf>
+  </confs>
+</configurationDescriptor>
