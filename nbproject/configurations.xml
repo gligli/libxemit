@@ -3,6 +3,7 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df name="libxemit" root=".">
       <df name="build">
+        <in>xemit.d</in>
         <in>xemitops.d</in>
       </df>
       <df name="gen">
@@ -57,6 +58,8 @@
           </df>
         </df>
       </df>
+      <in>xemit.c</in>
+      <in>xemit.h</in>
       <in>xemitops.c</in>
       <in>xemitops.h</in>
     </df>

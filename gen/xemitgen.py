@@ -3,7 +3,7 @@
 SCRIPT_NAME = "Xenos shader emitter generator by GliGli"
 SCRIPT_VERSION = "0.03"
 
-SHADER_COMPILER = "../rshadercompiler/rshadercompiler.exe"
+SHADER_COMPILER = "../xenosc/xenosc.exe"
 OUTPUT_DIR = "./compiled"
 
 OUTPUT_C_FILE = "../xemitops.c"
@@ -406,7 +406,7 @@ for op in OPS:
 		outname=OUTPUT_DIR+'/'+stmt+'.bin'
 		out=os.tmpfile()
 
-		subprocess.call(SHADER_COMPILER+" \""+tmpfile.name+"\" \""+outname+"\" /xps /Debug /SkipValidation",stdout=out)
+		subprocess.call(SHADER_COMPILER+" \""+tmpfile.name+"\" asm -o \""+outname+"\" -a -d -cv",stdout=out)
 
 		out.seek(0,0)
 		outs=out.read()
@@ -422,7 +422,7 @@ for op in OPS:
 			continue
 
 		out=open(outname,'rb')
-		
+
 		outsize=os.fstat(out.fileno()).st_size;
 
 		print "Valid!"
