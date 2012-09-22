@@ -12,9 +12,9 @@ OUTPUT_C_FILE = "../xemitops.c"
 OPS = \
 [
 	# sequencer
-#	['exec',0],
-#	['exece',0],
-#	['cnop',0],
+	['exec',[]],
+	['exece',[]],
+	['cnop',[]],
 
 	# alu vector
 	['add',[0,4,4]],
@@ -26,8 +26,8 @@ OPS = \
 	['dp3',[0,4,4]],
 	['dp4',[0,4,4]],
 	['dst',[0,4,4]],
-	['floor',[0,2]],
-	['frc',[0,2]],
+	['floor',[0,4]],
+	['frc',[0,4]],
 	['kill_eq',[0,4,4]],
 	['kill_ge',[0,4,4]],
 	['kill_gt',[0,4,4]],
@@ -35,10 +35,10 @@ OPS = \
 	['mad',[0,4,4,4]],
 	['max',[0,4,4]],
 	['maxa',[0,4,4]],
-	['max4',[0,2]],
+	['max4',[0,4]],
 	['min',[0,4,4]],
-	['mov',[0,2]],
-	['mova',[0,2]],
+	['mov',[0,4]],
+	['mova',[0,4]],
 	['mul',[0,4,4]],
 	['nop',[]],
 	['seq',[0,4,4]],
@@ -49,7 +49,7 @@ OPS = \
 	['sge',[0,4,4]],
 	['sgt',[0,4,4]],
 	['sne',[0,4,4]],
-	['trunc',[0,2]],
+	['trunc',[0,4]],
 
 	['add_sat',[0,4,4]],
 	['cndeq_sat',[0,4,4,4]],
@@ -60,8 +60,8 @@ OPS = \
 	['dp3_sat',[0,4,4]],
 	['dp4_sat',[0,4,4]],
 	['dst_sat',[0,4,4]],
-	['floor_sat',[0,2]],
-	['frc_sat',[0,2]],
+	['floor_sat',[0,4]],
+	['frc_sat',[0,4]],
 	['kill_eq_sat',[0,4,4]],
 	['kill_ge_sat',[0,4,4]],
 	['kill_gt_sat',[0,4,4]],
@@ -69,10 +69,10 @@ OPS = \
 	['mad_sat',[0,4,4,4]],
 	['max_sat',[0,4,4]],
 	['maxa_sat',[0,4,4]],
-	['max4_sat',[0,2]],
+	['max4_sat',[0,4]],
 	['min_sat',[0,4,4]],
-	['mov_sat',[0,2]],
-	['mova_sat',[0,2]],
+	['mov_sat',[0,4]],
+	['mova_sat',[0,4]],
 	['mul_sat',[0,4,4]],
 	['nop_sat',[]],
 	['seq_sat',[0,4,4]],
@@ -83,7 +83,7 @@ OPS = \
 	['sge_sat',[0,4,4]],
 	['sgt_sat',[0,4,4]],
 	['sne_sat',[0,4,4]],
-	['trunc_sat',[0,2]],
+	['trunc_sat',[0,4]],
 
 
 	# alu scalar
@@ -516,7 +516,7 @@ print>>cfile,'// generated with %s %s (%s)' % (SCRIPT_NAME,SCRIPT_VERSION,__file
 print>>cfile
 print>>cfile,'#include "xemitops.h"'
 print>>cfile
-print>>cfile,'struct xemit_op_s xemit_ops[%d]=' % len(outops)
+print>>cfile,'struct xemit_op_s xemit_ops[%d]=' % (len(outops)+1)
 print>>cfile,'{'
 for oo in outops:
 	print>>cfile,'\t{',
@@ -569,7 +569,7 @@ for oo in outops:
 
 	print>>cfile,'},'
 
-
+print>>cfile,'\t{NULL}'
 print>>cfile,'};\n'
 
 cfile.close()

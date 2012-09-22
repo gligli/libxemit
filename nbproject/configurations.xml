@@ -10,53 +10,16 @@
         <df name="compiled">
         </df>
       </df>
-      <df name="rshadercompiler">
-        <df name="rshadercompiler">
-          <df name="bin">
-            <df name="x86">
-              <df name="Debug">
-              </df>
-              <df name="Release">
-              </df>
-            </df>
-          </df>
-          <df name="Content">
-            <df name="bin">
-              <df name="x86">
-                <df name="Debug">
-                </df>
-                <df name="Release">
-                </df>
-              </df>
-            </df>
-            <df name="obj">
-              <df name="x86">
-                <df name="Debug">
-                  <df name="TempPE">
-                  </df>
-                </df>
-                <df name="Release">
-                  <df name="TempPE">
-                  </df>
-                </df>
-              </df>
-            </df>
-          </df>
-          <df name="obj">
-            <df name="x86">
-              <df name="Debug">
-                <df name="TempPE">
-                </df>
-              </df>
-              <df name="Release">
-                <df name="TempPE">
-                </df>
-              </df>
-            </df>
-          </df>
-          <df name="Properties">
+      <df name="xenosc">
+        <df name="Debug">
+        </df>
+        <df name="ipch">
+          <df name="xenosc_vc2k10-cdf7314e">
           </df>
         </df>
+        <df name="Release">
+        </df>
+        <in>main.c</in>
       </df>
       <in>xemit.c</in>
       <in>xemit.h</in>
@@ -86,7 +49,7 @@
       <makefileType>
         <makeTool>
           <buildCommandWorkingDir>.</buildCommandWorkingDir>
-          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <buildCommand>${MAKE} -f Makefile install</buildCommand>
           <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
           <executablePath></executablePath>
         </makeTool>

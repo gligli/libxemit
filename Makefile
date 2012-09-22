@@ -102,12 +102,12 @@ $(BUILD):
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(OUTPUT).elf $(OUTPUT).elf32
+	@rm -fr $(BUILD) $(OUTPUT).a $(OUTPUT).elf32
 
-install:	$(OUTPUT).a
+install:	$(BUILD) $(OUTPUT).a
 		mkdir -p $(DEVKITXENON)/usr/include/$(TARGET)
 		cp xemit.h $(DEVKITXENON)/usr/include/$(TARGET)
-		cp $(TARGET).a $(DEVKITXENON)/usr/lib/$(TARGET).a
+		cp $(OUTPUT).a $(DEVKITXENON)/usr/lib/$(TARGET).a
 
 #---------------------------------------------------------------------------------
 else
@@ -118,7 +118,6 @@ DEPENDS	:=	$(OFILES:.o=.d)
 # main targets
 #---------------------------------------------------------------------------------
 $(OUTPUT).a: $(OFILES)
-
 
 -include $(DEPENDS)
 
