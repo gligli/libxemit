@@ -9,7 +9,7 @@
 const char * XNA_DLL = "%CommonProgramFiles%\\microsoft shared\\XNA\\Framework\\v3.1\\XnaNative.dll";
 
 const char * XENOSC_NAME = "Xenos shader compiler by GliGli";
-const char * XENOSC_VERSION = "1.00 beta";
+const char * XENOSC_VERSION = "1.01 beta";
 
 typedef int (WINAPI * CreateCompileShaderFromSourceForXbox)(char *,unsigned int,void*,void*,char*,char*,unsigned int,void**,unsigned int*,void**,unsigned int*);
 typedef int (WINAPI * CreateAssembleShaderFromSourceForXbox)(char *,unsigned int,void*,void*,unsigned int,void**,unsigned int*,void**,unsigned int*);
@@ -59,24 +59,32 @@ int main(int argc, char* argv[])
 
 	if(argc<3)
 	{
-		printf("usage: %s input.hlsl profile_string [options...]\n",argv[0]);
+		printf("usage:\n");
+		printf("\t%s input.hlsl profile_string [options...]\n",argv[0]);
+		printf("\n");
+		printf("profile strings:\n");
+		printf("\tvs_1_1 vs_2_0 vs_2_a vs_2_sw vs_3_0 vs_3_sw vs_3_swx ps_1_1\n");
+		printf("\tps_1_2 ps_1_3 ps_1_4 ps_2_0 ps_2_a ps_2_b ps_2_sw ps_3_0 ps_3_sw\n");
+		printf("\ttx_1_0\n");
+		printf("\tfx_2_0 fxl_3_0\n");
+		printf("\n");
 		printf("options:\n");
-		printf("\t -o output.bin: output file name\n");
-		printf("\t -f main: name of main function\n");
-		printf("\t -dll XnaNative.dll: use this dll file as compiler\n");
-		printf("\t -a: assemble shader instead of compiling it\n");
-		printf("\t -d: debug mode\n");
-		printf("\t -co: don't optimize\n");
-		printf("\t -cv: don't validate\n");
-		printf("\t -mr: pack matrices row major\n");
-		printf("\t -mc: pack matrices column major\n");
-		printf("\t -fa: avoid flow control\n");
-		printf("\t -fp: prefer flow control\n");
-		printf("\t -pp: partial precision\n");
+		printf("\t-o output.bin: output file name\n");
+		printf("\t-f main: name of main function\n");
+		printf("\t-dll XnaNative.dll: use this dll file as compiler\n");
+		printf("\t-a: assemble shader instead of compiling it\n");
+		printf("\t-d: debug mode\n");
+		printf("\t-co: don't optimize\n");
+		printf("\t-cv: don't validate\n");
+		printf("\t-mr: pack matrices row major\n");
+		printf("\t-mc: pack matrices column major\n");
+		printf("\t-fa: avoid flow control\n");
+		printf("\t-fp: prefer flow control\n");
+		printf("\t-pp: partial precision\n");
 		return 0;
 	}
 
-	for(i=0;i<argc;++i)
+	for(i=2;i<argc;++i)
 	{
 		if(!strcmp(argv[i],"-o"))
 		{
@@ -135,7 +143,7 @@ int main(int argc, char* argv[])
 	{
 		char * dot;
 		strcpy(output_name,input_name);
-		dot=strchr(output_name,'.');
+		dot=strrchr(output_name,'.');
 		if (dot) *dot=0;
 
 		strcat(output_name,".bin");
