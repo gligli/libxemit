@@ -1,218 +1,218 @@
 # /!\ warning /!\ uglyssimo code ahead ;)
 
 SCRIPT_NAME = "Xenos shader emitter generator by GliGli"
-SCRIPT_VERSION = "0.03"
+SCRIPT_VERSION = "0.04"
 
 SHADER_COMPILER = "../xenosc/xenosc.exe"
 OUTPUT_DIR = "./compiled"
 
 OUTPUT_C_FILE = "../xemitops.c"
 
-# array of [opname,[args swizzles]]
+# array of [opname,[args swizzles],optype]
 OPS = \
 [
 	# sequencer
-	['exec',[]],
-	['exece',[]],
-	['cnop',[]],
+#	['exec',[],0],
+#	['exece',[],0],
+	['cnop',[],0],
 
 	# alu vector
-	['add',[0,4,4]],
-	['cndeq',[0,4,4,4]],
-	['cndge',[0,4,4,4]],
-	['cndgt',[0,4,4,4]],
-	['cube',[0,4,4]],
-	['dp2add',[0,4,4,4]],
-	['dp3',[0,4,4]],
-	['dp4',[0,4,4]],
-	['dst',[0,4,4]],
-	['floor',[0,4]],
-	['frc',[0,4]],
-	['kill_eq',[0,4,4]],
-	['kill_ge',[0,4,4]],
-	['kill_gt',[0,4,4]],
-	['kill_ne',[0,4,4]],
-	['mad',[0,4,4,4]],
-	['max',[0,4,4]],
-	['maxa',[0,4,4]],
-	['max4',[0,4]],
-	['min',[0,4,4]],
-	['mov',[0,4]],
-	['mova',[0,4]],
-	['mul',[0,4,4]],
-	['nop',[]],
-	['seq',[0,4,4]],
-	['setp_eq_push',[0,4,4]],
-	['setp_ge_push',[0,4,4]],
-	['setp_gt_push',[0,4,4]],
-	['setp_ne_push',[0,4,4]],
-	['sge',[0,4,4]],
-	['sgt',[0,4,4]],
-	['sne',[0,4,4]],
-	['trunc',[0,4]],
+	['add',[0,4,4],1],
+	['cndeq',[0,4,4,4],1],
+	['cndge',[0,4,4,4],1],
+	['cndgt',[0,4,4,4],1],
+	['cube',[0,4,4],1],
+	['dp2add',[0,4,4,4],1],
+	['dp3',[0,4,4],1],
+	['dp4',[0,4,4],1],
+	['dst',[0,4,4],1],
+	['floor',[0,4],1],
+	['frc',[0,4],1],
+	['kill_eq',[0,4,4],1],
+	['kill_ge',[0,4,4],1],
+	['kill_gt',[0,4,4],1],
+	['kill_ne',[0,4,4],1],
+	['mad',[0,4,4,4],1],
+	['max',[0,4,4],1],
+	['maxa',[0,4,4],1],
+	['max4',[0,4],1],
+	['min',[0,4,4],1],
+	['mov',[0,4],1],
+	['mova',[0,4],1],
+	['mul',[0,4,4],1],
+	['nop',[],1],
+	['seq',[0,4,4],1],
+	['setp_eq_push',[0,4,4],1],
+	['setp_ge_push',[0,4,4],1],
+	['setp_gt_push',[0,4,4],1],
+	['setp_ne_push',[0,4,4],1],
+	['sge',[0,4,4],1],
+	['sgt',[0,4,4],1],
+	['sne',[0,4,4],1],
+	['trunc',[0,4],1],
 
-	['add_sat',[0,4,4]],
-	['cndeq_sat',[0,4,4,4]],
-	['cndge_sat',[0,4,4,4]],
-	['cndgt_sat',[0,4,4,4]],
-	['cube_sat',[0,4,4]],
-	['dp2add_sat',[0,4,4,4]],
-	['dp3_sat',[0,4,4]],
-	['dp4_sat',[0,4,4]],
-	['dst_sat',[0,4,4]],
-	['floor_sat',[0,4]],
-	['frc_sat',[0,4]],
-	['kill_eq_sat',[0,4,4]],
-	['kill_ge_sat',[0,4,4]],
-	['kill_gt_sat',[0,4,4]],
-	['kill_ne_sat',[0,4,4]],
-	['mad_sat',[0,4,4,4]],
-	['max_sat',[0,4,4]],
-	['maxa_sat',[0,4,4]],
-	['max4_sat',[0,4]],
-	['min_sat',[0,4,4]],
-	['mov_sat',[0,4]],
-	['mova_sat',[0,4]],
-	['mul_sat',[0,4,4]],
-	['nop_sat',[]],
-	['seq_sat',[0,4,4]],
-	['setp_eq_push_sat',[0,4,4]],
-	['setp_ge_push_sat',[0,4,4]],
-	['setp_gt_push_sat',[0,4,4]],
-	['setp_ne_push_sat',[0,4,4]],
-	['sge_sat',[0,4,4]],
-	['sgt_sat',[0,4,4]],
-	['sne_sat',[0,4,4]],
-	['trunc_sat',[0,4]],
+	['add_sat',[0,4,4],2],
+	['cndeq_sat',[0,4,4,4],2],
+	['cndge_sat',[0,4,4,4],2],
+	['cndgt_sat',[0,4,4,4],2],
+	['cube_sat',[0,4,4],2],
+	['dp2add_sat',[0,4,4,4],2],
+	['dp3_sat',[0,4,4],2],
+	['dp4_sat',[0,4,4],2],
+	['dst_sat',[0,4,4],2],
+	['floor_sat',[0,4],2],
+	['frc_sat',[0,4],2],
+	['kill_eq_sat',[0,4,4],2],
+	['kill_ge_sat',[0,4,4],2],
+	['kill_gt_sat',[0,4,4],2],
+	['kill_ne_sat',[0,4,4],2],
+	['mad_sat',[0,4,4,4],2],
+	['max_sat',[0,4,4],2],
+	['maxa_sat',[0,4,4],2],
+	['max4_sat',[0,4],2],
+	['min_sat',[0,4,4],2],
+	['mov_sat',[0,4],2],
+	['mova_sat',[0,4],2],
+	['mul_sat',[0,4,4],2],
+	['nop_sat',[],2],
+	['seq_sat',[0,4,4],2],
+	['setp_eq_push_sat',[0,4,4],2],
+	['setp_ge_push_sat',[0,4,4],2],
+	['setp_gt_push_sat',[0,4,4],2],
+	['setp_ne_push_sat',[0,4,4],2],
+	['sge_sat',[0,4,4],2],
+	['sgt_sat',[0,4,4],2],
+	['sne_sat',[0,4,4],2],
+	['trunc_sat',[0,4],2],
 
 
 	# alu scalar
-	['adds',[0,2]],
-#	['addsc',[0,1,1]],
-	['adds_prev',[0,1]],
-	['cos',[0,1]],
-	['exp',[0,1]],
-	['floors',[0,1]],
-	['frcs',[0,1]],
-	['kills_eq',[0,1]],
-	['kills_ge',[0,1]],
-	['kills_gt',[0,1]],
-	['kills_ne',[0,1]],
-	['kills_one',[0,1]],
-	['log',[0,1]],
-	['logc',[0,1]],
-	['maxas',[0,2]],
-	['maxasf',[0,2]],
-	['maxs',[0,2]],
-	['mins',[0,2]],
-	['movas',[0,1]],
-	['movasf',[0,1]],
-	['movs',[0,1]],
-	['muls',[0,2]],
-#	['mulsc',[0,1,1]],
-	['muls_prev',[0,1]],
-	['muls_prev2',[0,2]],
-	['nops',[]],
-	['rcp',[0,1]],
-	['rcpc',[0,1]],
-	['rcpf',[0,1]],
-	['retain_prev',[0]],
-	['rsq',[0,1]],
-	['rsqc',[0,1]],
-	['rsqf',[0,1]],
-	['seqs',[0,1]],
-	['setp_clr',[0]],
-	['setp_eq',[0,1]],
-	['setp_ge',[0,1]],
-	['setp_gt',[0,1]],
-	['setp_inv',[0,1]],
-	['setp_ne',[0,1]],
-	['setp_pop',[0,1]],
-	['setp_rstr',[0,1]],
-	['sges',[0,1]],
-	['sgts',[0,1]],
-	['sin',[0,1]],
-	['snes',[0,1]],
-	['sqrt',[0,1]],
-	['subs',[0,2]],
-#	['subsc',[0,1,1]],
-	['subs_prev',[0,1]],
-	['truncs',[0,1]],
+	['adds',[0,2],3],
+#	['addsc',[0,1,1],3],
+	['adds_prev',[0,1],3],
+	['cos',[0,1],3],
+	['exp',[0,1],3],
+	['floors',[0,1],3],
+	['frcs',[0,1],3],
+	['kills_eq',[0,1],3],
+	['kills_ge',[0,1],3],
+	['kills_gt',[0,1],3],
+	['kills_ne',[0,1],3],
+	['kills_one',[0,1],3],
+	['log',[0,1],3],
+	['logc',[0,1],3],
+	['maxas',[0,2],3],
+	['maxasf',[0,2],3],
+	['maxs',[0,2],3],
+	['mins',[0,2],3],
+	['movas',[0,1],3],
+	['movasf',[0,1],3],
+	['movs',[0,1],3],
+	['muls',[0,2],3],
+#	['mulsc',[0,1,1],3],
+	['muls_prev',[0,1],3],
+	['muls_prev2',[0,2],3],
+	['nops',[],3],
+	['rcp',[0,1],3],
+	['rcpc',[0,1],3],
+	['rcpf',[0,1],3],
+	['retain_prev',[0],3],
+	['rsq',[0,1],3],
+	['rsqc',[0,1],3],
+	['rsqf',[0,1],3],
+	['seqs',[0,1],3],
+	['setp_clr',[0],3],
+	['setp_eq',[0,1],3],
+	['setp_ge',[0,1],3],
+	['setp_gt',[0,1],3],
+	['setp_inv',[0,1],3],
+	['setp_ne',[0,1],3],
+	['setp_pop',[0,1],3],
+	['setp_rstr',[0,1],3],
+	['sges',[0,1],3],
+	['sgts',[0,1],3],
+	['sin',[0,1],3],
+	['snes',[0,1],3],
+	['sqrt',[0,1],3],
+	['subs',[0,2],3],
+#	['subsc',[0,1,1],3],
+	['subs_prev',[0,1],3],
+	['truncs',[0,1],3],
 
-	['adds_sat',[0,2]],
-#	['addsc_sat',[0,1,1]],
-	['adds_prev_sat',[0,1]],
-	['cos_sat',[0,1]],
-	['exp_sat',[0,1]],
-	['floors_sat',[0,1]],
-	['frcs_sat',[0,1]],
-	['kills_eq_sat',[0,1]],
-	['kills_ge_sat',[0,1]],
-	['kills_gt_sat',[0,1]],
-	['kills_ne_sat',[0,1]],
-	['kills_one_sat',[0,1]],
-	['log_sat',[0,1]],
-	['logc_sat',[0,1]],
-	['maxas_sat',[0,2]],
-	['maxasf_sat',[0,2]],
-	['maxs_sat',[0,2]],
-	['mins_sat',[0,2]],
-	['movas_sat',[0,1]],
-	['movasf_sat',[0,1]],
-	['movs_sat',[0,1]],
-	['muls_sat',[0,2]],
-#	['mulsc_sat',[0,1,1]],
-	['muls_prev_sat',[0,1]],
-	['muls_prev2_sat',[0,2]],
-	['nops_sat',[]],
-	['rcp_sat',[0,1]],
-	['rcpc_sat',[0,1]],
-	['rcpf_sat',[0,1]],
-	['retain_prev_sat',[0]],
-	['rsq_sat',[0,1]],
-	['rsqc_sat',[0,1]],
-	['rsqf_sat',[0,1]],
-	['seqs_sat',[0,1]],
-	['setp_clr_sat',[0]],
-	['setp_eq_sat',[0,1]],
-	['setp_ge_sat',[0,1]],
-	['setp_gt_sat',[0,1]],
-	['setp_inv_sat',[0,1]],
-	['setp_ne_sat',[0,1]],
-	['setp_pop_sat',[0,1]],
-	['setp_rstr_sat',[0,1]],
-	['sges_sat',[0,1]],
-	['sgts_sat',[0,1]],
-	['sin_sat',[0,1]],
-	['snes_sat',[0,1]],
-	['sqrt_sat',[0,1]],
-	['subs_sat',[0,2]],
-#	['subsc_sat',[0,1,1]],
-	['subs_prev_sat',[0,1]],
-	['truncs_sat',[0,1]],
+	['adds_sat',[0,2],4],
+#	['addsc_sat',[0,1,1],4],
+	['adds_prev_sat',[0,1],4],
+	['cos_sat',[0,1],4],
+	['exp_sat',[0,1],4],
+	['floors_sat',[0,1],4],
+	['frcs_sat',[0,1],4],
+	['kills_eq_sat',[0,1],4],
+	['kills_ge_sat',[0,1],4],
+	['kills_gt_sat',[0,1],4],
+	['kills_ne_sat',[0,1],4],
+	['kills_one_sat',[0,1],4],
+	['log_sat',[0,1],4],
+	['logc_sat',[0,1],4],
+	['maxas_sat',[0,2],4],
+	['maxasf_sat',[0,2],4],
+	['maxs_sat',[0,2],4],
+	['mins_sat',[0,2],4],
+	['movas_sat',[0,1],4],
+	['movasf_sat',[0,1],4],
+	['movs_sat',[0,1],4],
+	['muls_sat',[0,2],4],
+#	['mulsc_sat',[0,1,1],4],
+	['muls_prev_sat',[0,1],4],
+	['muls_prev2_sat',[0,2],4],
+	['nops_sat',[],4],
+	['rcp_sat',[0,1],4],
+	['rcpc_sat',[0,1],4],
+	['rcpf_sat',[0,1],4],
+	['retain_prev_sat',[0],4],
+	['rsq_sat',[0,1],4],
+	['rsqc_sat',[0,1],4],
+	['rsqf_sat',[0,1],4],
+	['seqs_sat',[0,1],4],
+	['setp_clr_sat',[0],4],
+	['setp_eq_sat',[0,1],4],
+	['setp_ge_sat',[0,1],4],
+	['setp_gt_sat',[0,1],4],
+	['setp_inv_sat',[0,1],4],
+	['setp_ne_sat',[0,1],4],
+	['setp_pop_sat',[0,1],4],
+	['setp_rstr_sat',[0,1],4],
+	['sges_sat',[0,1],4],
+	['sgts_sat',[0,1],4],
+	['sin_sat',[0,1],4],
+	['snes_sat',[0,1],4],
+	['sqrt_sat',[0,1],4],
+	['subs_sat',[0,2],4],
+#	['subsc_sat',[0,1,1],4],
+	['subs_prev_sat',[0,1],4],
+	['truncs_sat',[0,1],4],
 
 
 	# fetch
-	['getBCF1D',[0,1,0]],
-	['getBCF2D',[0,2,0]],
-	['getBCF3D',[0,3,0]],
-	['getBCFCube',[0,3,0]],
-	['getCompTexLOD1D',[0,1,0]],
-	['getCompTexLOD2D',[0,2,0]],
-	['getCompTexLOD3D',[0,3,0]],
-	['getCompTexLODCube',[0,3,0]],
-	['getGradients',[0,4,0]],
-	['getWeights1D',[0,1,0]],
-	['getWeights2D',[0,2,0]],
-	['getWeights3D',[0,3,0]],
-	['getWeightsCube',[0,3,0]],
-	['setGradientH',[3]],
-	['setGradientV',[3]],
-	['setTexLOD',[1]],
-	['tfetch1D',[0,1,0]],
-	['tfetch2D',[0,2,0]],
-	['tfetch3D',[0,3,0]],
-	['tfetchCube',[0,3,0]],
+	['getBCF1D',[0,1,0],5],
+	['getBCF2D',[0,2,0],5],
+	['getBCF3D',[0,3,0],5],
+	['getBCFCube',[0,3,0],5],
+	['getCompTexLOD1D',[0,1,0],5],
+	['getCompTexLOD2D',[0,2,0],5],
+	['getCompTexLOD3D',[0,3,0],5],
+	['getCompTexLODCube',[0,3,0],5],
+	['getGradients',[0,4,0],5],
+	['getWeights1D',[0,1,0],5],
+	['getWeights2D',[0,2,0],5],
+	['getWeights3D',[0,3,0],5],
+	['getWeightsCube',[0,3,0],5],
+	['setGradientH',[3],5],
+	['setGradientV',[3],5],
+	['setTexLOD',[1],5],
+	['tfetch1D',[0,1,0],5],
+	['tfetch2D',[0,2,0],5],
+	['tfetch3D',[0,3,0],5],
+	['tfetchCube',[0,3,0],5],
 ]
 
 # array of [regtype,regcount,[valid arg positions]]
@@ -234,10 +234,10 @@ import binascii
 import struct
 
 def xlong(s):
-    return sum([ord(c) << e*8 for e,c in enumerate(s)])
+    return sum([ord(c) << (11-e)*8 for e,c in enumerate(s)])
 
 def rxstr(x,l):
-    return chr(x&255) + rxstr(x >> 8,l+1) if l<12 else ''
+    return chr((x>>(11*8))&255) + rxstr(x << 8,l+1) if l<12 else ''
 
 def xstr(x):
 	return rxstr(x,0)
@@ -446,12 +446,12 @@ for op in OPS:
 
 		bit=-1;
 		start=-1;
-		prevbit=0;
 		regplace=[]
 
 #		print "%024x"%current
 
 		if curswiz!=-1:
+			prevbit=0;
 			for bitnum in range(97):
 				bit=(current>>bitnum) & 1
 
@@ -471,6 +471,7 @@ for op in OPS:
 				prevbit=bit
 
 		elif curmask!=-1:
+			prevbit=0;
 			for bitnum in range(97):
 				bit=(current>>bitnum) & 1
 
@@ -480,12 +481,13 @@ for op in OPS:
 				if prevbit==1 and bit==0:
 					outops[len(outops)-1][5]=start
 					outops[len(outops)-1][6]=bitnum-1
-					start=-1
-					bit=0
+
+					break;
 
 				prevbit=bit
 
 		elif curarg!=-1:
+			prevbit=0;
 			for bitnum in range(97):
 				bit=(current>>bitnum) & 1
 
@@ -509,6 +511,7 @@ print "Step 1 done!"
 # generate c code
 
 C_REGTYPE=['XEMR_TEMP','XEMR_CONST','XEMR_COLOR_OUT','XEMR_TEX_FETCH']
+C_OPTYPE=['XEMO_SEQUENCER','XEMO_ALU_VECTOR','XEMO_ALU_VECTOR_SAT','XEMO_ALU_SCALAR','XEMO_ALU_SCALAR_SAT','XEMO_FETCHES']
 
 cfile=open(OUTPUT_C_FILE,'w')
 
@@ -522,6 +525,15 @@ for oo in outops:
 	print>>cfile,'\t{',
 
 	print>>cfile,'"'+oo[0]+'",',
+
+	ot=-1;
+
+	for o in OPS:
+		if o[0]==oo[0]:
+			ot=o[2];
+			break
+			
+	print>>cfile,"%s,"%(C_OPTYPE[ot]),
 
 	print>>cfile,'{',
 	for i in struct.unpack('BBBBBBBBBBBB',xstr(oo[1])):
@@ -547,10 +559,13 @@ for oo in outops:
 				print>>cfile,'{',-1,',',-1,'},',
 			print>>cfile,'},',
 
-			for op in OPS:
-				if op[0]==oo[0]:
-					print>>cfile,op[1][ri],',',
-					break;
+			if ot!=5: # TODO: no swizzles for fetches for now (different format)
+				for op in OPS:
+					if op[0]==oo[0]:
+						print>>cfile,op[1][ri],',',
+						break;
+			else:
+				print>>cfile,'0',',',
 
 			swi=-1
 			for sw in oo[4]:
