@@ -166,7 +166,7 @@ static void maskInOp(u8 * opbin, int value, int start, int end, int masked)
 	}
 }
 
-struct XemitShader *Xemit_Create(int is_pixel_shader)
+struct XemitShader *Xemit_Create(int is_pixel_shader,int last_used_temp_register)
 {
 	if(!is_pixel_shader)
 	{
@@ -178,6 +178,7 @@ struct XemitShader *Xemit_Create(int is_pixel_shader)
 	memset(s, 0, sizeof(*s));
 	
 	s->is_pixel_shader=is_pixel_shader?1:0;
+	s->last_used_temp_register=last_used_temp_register;
 
 	return s;
 }
@@ -274,7 +275,7 @@ int Xemit_OpFull(struct XemitShader *shader, int reg_count, char * name,
 	
 	if (!opd)
 	{
-		XEMIT_ERROR("op not found\n");
+		XEMIT_ERROR("op '%s' not found\n",name);
 		return 6;
 	}
 
@@ -306,7 +307,14 @@ int Xemit_OpFull(struct XemitShader *shader, int reg_count, char * name,
 	for(i=1;i<reg_count;++i)
 	{
 		if(rsws[i])
-			maskInOp(op,encodeSwizzle(rsws[i],opd->regs[i].swizzle_count),opd->regs[i].swizzle_mask.start,opd->regs[i].swizzle_mask.end,0);
+		{
+			u32 encoded_sw=encodeSwizzle(rsws[i],opd->regs[i].swizzle_count);
+			
+			for(j=0;j<2;++j)
+			{
+				maskInOp(op,encoded_sw,opd->regs[i].swizzle_mask[j].start,opd->regs[i].swizzle_mask[j].end,0);
+			}
+		}
 	}
 	
 	// copy op to slot
@@ -398,7 +406,7 @@ void * Xemit_Generate(struct XemitShader *shader)
 	u8 sequencing_ops[num_sequencing_ops][12];
 	u32 seq_op_num_bins[num_sequencing_ops];
 
-	u32 fetch_info[2];
+	u32 fetch_info[2]={0,0};
 
 	u32 awaiting_fetch_op=0;
 	u32 awaiting_bins=0;
@@ -455,7 +463,7 @@ void * Xemit_Generate(struct XemitShader *shader)
 				sequencing_ops[cur_seq_op][11]=fetch_info[0]&0xff;
 
 				sequencing_ops[cur_seq_op][6]=0xc4;
-				sequencing_ops[cur_seq_op][8]=(cur_op<num_ops-1)?0x12:0x22;
+				sequencing_ops[cur_seq_op][8]=(num_ops)?0x12:0x22;
 			}
 			else
 			{
@@ -523,7 +531,7 @@ void * Xemit_Generate(struct XemitShader *shader)
 	sh->off_shader=sizeof(struct XenosShaderHeader);
 	sh->unk1[0]=code_size;
 	
-	sd->program_control=0x10020100;
+	sd->program_control=0x10020000|(shader->last_used_temp_register<<8);
 	sd->sh_size=code_size;
 	sd->unk1[3]=1;
 	

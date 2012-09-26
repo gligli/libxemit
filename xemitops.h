@@ -35,7 +35,7 @@ struct xemit_reg_s
 	xemit_reg_type_t reg_type;
 	struct xemit_mask_s reg_mask[2]; // there can be 2 reg masks
 	u8 swizzle_count;
-	struct xemit_mask_s swizzle_mask;
+	struct xemit_mask_s swizzle_mask[2]; // there can be 2 swizzle masks
 };
 
 struct xemit_op_s

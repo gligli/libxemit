@@ -1,7 +1,7 @@
 # /!\ warning /!\ uglyssimo code ahead ;)
 
 SCRIPT_NAME = "Xenos shader emitter generator by GliGli"
-SCRIPT_VERSION = "0.04"
+SCRIPT_VERSION = "0.05"
 
 SHADER_COMPILER = "../xenosc/xenosc.exe"
 OUTPUT_DIR = "./compiled"
@@ -385,15 +385,6 @@ for op in OPS:
 		
 		tmpfile.write('xps_3_0\n')
 
-#		tmpfile.write('alloc colors\n');
-#		tmpfile.write('mov oC0,c0\n');
-#		tmpfile.write('mov oC1,c0\n');
-#		tmpfile.write('mov oC2,c0\n');
-#		tmpfile.write('mov oC3,c0\n');
-#		tmpfile.write('mov r0,c0\n');
-#		tmpfile.write('mov r31,c0\n');
-#		tmpfile.write('exec\n\n')
-
 		tmpfile.write(stmt+'\n');
 		tmpfile.write(stmt+'\n');
 		tmpfile.write(stmt+'\n');
@@ -458,6 +449,7 @@ for op in OPS:
 				if prevbit==0 and bit==1:
 					start=bitnum
 
+				if (prevbit==1 and bit==0) or (start!=-1 and bitnum-start>=7):
 					lowerswiz=False
 					for ps in outops[len(outops)-1][4]:
 						if ps[0]==curarg and ps[3]<curswiz:
@@ -466,7 +458,8 @@ for op in OPS:
 					if not lowerswiz:
 						outops[len(outops)-1][4].append([curarg,start,start+7,curswiz])
 
-					break;
+					start=-1
+					bit=0
 
 				prevbit=bit
 
@@ -567,14 +560,20 @@ for oo in outops:
 			else:
 				print>>cfile,'0',',',
 
+			print>>cfile,'{',
 			swi=-1
 			for sw in oo[4]:
 				if sw[0]==ri:
 					swi=swi+1
 					print>>cfile,'{',sw[1],',',sw[2],'},',
-					break;
+
+					if ot!=1: # TODO: double swizzle only for alu vector
+						break
 			if swi<0:
 				print>>cfile,'{',-1,',',-1,'},',
+			if swi<1:
+				print>>cfile,'{',-1,',',-1,'},',
+			print>>cfile,'},',
 		else:
 			print>>cfile,'XEMR_NONE',
 

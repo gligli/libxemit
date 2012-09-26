@@ -8,6 +8,7 @@
 struct XemitShader
 {
 	int is_pixel_shader;
+	int last_used_temp_register;
 	
 	u32 next_slot;
 	u8 slots[XEMIT_MAX_SHADER_INSTRUCTION_SLOTS][12];
@@ -17,7 +18,7 @@ struct XemitShader
 	u32 generated_size;
 };
 
-struct XemitShader *Xemit_Create(int is_pixel_shader);
+struct XemitShader *Xemit_Create(int is_pixel_shader,int last_used_temp_register);
 void Xemit_Destroy(struct XemitShader * shader);
 
 int Xemit_Op0(struct XemitShader *shader, char * name);
