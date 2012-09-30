@@ -40,7 +40,7 @@ struct xemit_reg_s
 
 struct xemit_op_s
 {
-	char* name;
+	const char* name;
 	xemit_op_type_t op_type;
 	u8 base_bin[12];
 	struct xemit_mask_s out_mask;

@@ -24,7 +24,7 @@
 
 #define BIN_SLOTS 6
 
-static xemit_reg_type_t encodeRegType(char * regtype)
+static xemit_reg_type_t encodeRegType(const char * regtype)
 {
 	xemit_reg_type_t ert=XEMR_NONE;
 	
@@ -70,7 +70,7 @@ static int encodeNibble(char nibble)
 	return n;
 }
 
-static u32 encodeOutputMask(char * mask)
+static u32 encodeOutputMask(const char * mask)
 {
 	int len=strlen(mask);
 	
@@ -107,7 +107,7 @@ static u32 encodeOutputMask(char * mask)
 }
 
 
-static u32 encodeSwizzle(char * swizzle, int expected_len)
+static u32 encodeSwizzle(const char * swizzle, int expected_len)
 {
 	int len=strlen(swizzle);
 	
@@ -194,11 +194,11 @@ void Xemit_Destroy(struct XemitShader * shader)
 	free(shader);
 }
 
-int Xemit_OpFull(struct XemitShader *shader, int reg_count, char * name,
-		char * rd_type, int rd, char * rd_mask,
-		char * rs1_type, int rs1, char * rs1_swizzle,
-		char * rs2_type, int rs2, char * rs2_swizzle,
-		char * rs3_type, int rs3, char * rs3_swizzle)
+int Xemit_OpFull(struct XemitShader *shader, int reg_count, const char * name,
+		const char * rd_type, int rd, const char * rd_mask,
+		const char * rs1_type, int rs1, const char * rs1_swizzle,
+		const char * rs2_type, int rs2, const char * rs2_swizzle,
+		const char * rs3_type, int rs3, const char * rs3_swizzle)
 {
 	if (shader->next_slot>=XEMIT_MAX_SHADER_INSTRUCTION_SLOTS)
 	{
@@ -245,7 +245,7 @@ int Xemit_OpFull(struct XemitShader *shader, int reg_count, char * name,
 	}
 	
 	int regs[4]= {rd,rs1,rs2,rs3};
-	char * rsws[4]= {NULL,rs1_swizzle,rs2_swizzle,rs3_swizzle};
+	const char * rsws[4]= {NULL,rs1_swizzle,rs2_swizzle,rs3_swizzle};
 	
 	// find which op we will generate
 	
@@ -326,68 +326,68 @@ int Xemit_OpFull(struct XemitShader *shader, int reg_count, char * name,
 }
 
 
-int Xemit_Op0(struct XemitShader *shader, char * name)
+int Xemit_Op0(struct XemitShader *shader, const char * name)
 {
 	return Xemit_OpFull(shader,0,name,NULL,-1,NULL,NULL,-1,NULL,NULL,-1,NULL,NULL,-1,NULL);
 }
 
-int Xemit_Op1(struct XemitShader *shader, char * name,
-		char * rd_type, int rd)
+int Xemit_Op1(struct XemitShader *shader, const char * name,
+		const char * rd_type, int rd)
 {
 	return Xemit_OpFull(shader,1,name,rd_type,rd,NULL,NULL,-1,NULL,NULL,-1,NULL,NULL,-1,NULL);
 }
 
-int Xemit_Op2(struct XemitShader *shader, char * name,
-		char * rd_type, int rd,
-		char * rs1_type, int rs1)
+int Xemit_Op2(struct XemitShader *shader, const char * name,
+		const char * rd_type, int rd,
+		const char * rs1_type, int rs1)
 {
 	return Xemit_OpFull(shader,2,name,rd_type,rd,NULL,rs1_type,rs1,NULL,NULL,-1,NULL,NULL,-1,NULL);
 }
 
-int Xemit_Op3(struct XemitShader *shader, char * name,
-		char * rd_type, int rd,
-		char * rs1_type, int rs1,
-		char * rs2_type, int rs2)
+int Xemit_Op3(struct XemitShader *shader, const char * name,
+		const char * rd_type, int rd,
+		const char * rs1_type, int rs1,
+		const char * rs2_type, int rs2)
 {
 	return Xemit_OpFull(shader,3,name,rd_type,rd,NULL,rs1_type,rs1,NULL,rs2_type,rs2,NULL,NULL,-1,NULL);
 }
 
-int Xemit_Op4(struct XemitShader *shader, char * name,
-		char * rd_type, int rd,
-		char * rs1_type, int rs1,
-		char * rs2_type, int rs2,
-		char * rs3_type, int rs3)
+int Xemit_Op4(struct XemitShader *shader, const char * name,
+		const char * rd_type, int rd,
+		const char * rs1_type, int rs1,
+		const char * rs2_type, int rs2,
+		const char * rs3_type, int rs3)
 {
 	return Xemit_OpFull(shader,4,name,rd_type,rd,NULL,rs1_type,rs1,NULL,rs2_type,rs2,NULL,rs3_type,rs3,NULL);
 }
 
 
-int Xemit_Op1Ex(struct XemitShader *shader, char * name,
-		char * rd_type, int rd, char * rd_mask)
+int Xemit_Op1Ex(struct XemitShader *shader, const char * name,
+		const char * rd_type, int rd, const char * rd_mask)
 {
 	return Xemit_OpFull(shader,1,name,rd_type,rd,rd_mask,NULL,-1,NULL,NULL,-1,NULL,NULL,-1,NULL);
 }
 
-int Xemit_Op2Ex(struct XemitShader *shader, char * name,
-		char * rd_type, int rd, char * rd_mask,
-		char * rs1_type, int rs1, char * rs1_swizzle)
+int Xemit_Op2Ex(struct XemitShader *shader, const char * name,
+		const char * rd_type, int rd, const char * rd_mask,
+		const char * rs1_type, int rs1, const char * rs1_swizzle)
 {
 	return Xemit_OpFull(shader,2,name,rd_type,rd,rd_mask,rs1_type,rs1,rs1_swizzle,NULL,-1,NULL,NULL,-1,NULL);
 }
 
-int Xemit_Op3Ex(struct XemitShader *shader, char * name,
-		char * rd_type, int rd, char * rd_mask,
-		char * rs1_type, int rs1, char * rs1_swizzle,
-		char * rs2_type, int rs2, char * rs2_swizzle)
+int Xemit_Op3Ex(struct XemitShader *shader, const char * name,
+		const char * rd_type, int rd, const char * rd_mask,
+		const char * rs1_type, int rs1, const char * rs1_swizzle,
+		const char * rs2_type, int rs2, const char * rs2_swizzle)
 {
 	return Xemit_OpFull(shader,3,name,rd_type,rd,rd_mask,rs1_type,rs1,rs1_swizzle,rs2_type,rs2,rs2_swizzle,NULL,-1,NULL);
 }
 
-int Xemit_Op4Ex(struct XemitShader *shader, char * name,
-		char * rd_type, int rd, char * rd_mask,
-		char * rs1_type, int rs1, char * rs1_swizzle,
-		char * rs2_type, int rs2, char * rs2_swizzle,
-		char * rs3_type, int rs3, char * rs3_swizzle)
+int Xemit_Op4Ex(struct XemitShader *shader, const char * name,
+		const char * rd_type, int rd, const char * rd_mask,
+		const char * rs1_type, int rs1, const char * rs1_swizzle,
+		const char * rs2_type, int rs2, const char * rs2_swizzle,
+		const char * rs3_type, int rs3, const char * rs3_swizzle)
 {
 	return Xemit_OpFull(shader,4,name,rd_type,rd,rd_mask,rs1_type,rs1,rs1_swizzle,rs2_type,rs2,rs2_swizzle,rs3_type,rs3,rs3_swizzle);
 }
