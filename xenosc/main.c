@@ -6,7 +6,7 @@
 
 #include <windows.h>
 
-const char * XNA_DLL = "%CommonProgramFiles%\\microsoft shared\\XNA\\Framework\\v3.1\\XnaNative.dll";
+const char * XNA_DLL = "%CommonProgramFiles%\\microsoft shared\\XNA\\Framework\\v4.0\\XnaNative.dll";
 
 const char * XENOSC_NAME = "Xenos shader compiler by GliGli";
 const char * XENOSC_VERSION = "1.01 beta";
