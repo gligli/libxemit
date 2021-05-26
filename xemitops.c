@@ -1,4 +1,4 @@
-// generated with Xenos shader emitter generator by GliGli 0.05 (C:\X360 Hack\x360dev\ppc\libxemit\gen\xemitgen.py)
+// generated with Xenos shader emitter generator by GliGli 0.06 (C:\x360dev\libxemit\gen\xemitgen.py)
 
 #include "xemitops.h"
 

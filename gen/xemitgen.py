@@ -1,7 +1,9 @@
+#!/usr/bin/python3
+
 # /!\ warning /!\ uglyssimo code ahead ;)
 
 SCRIPT_NAME = "Xenos shader emitter generator by GliGli"
-SCRIPT_VERSION = "0.05"
+SCRIPT_VERSION = "0.06"
 
 SHADER_COMPILER = "../xenosc/xenosc.exe"
 OUTPUT_DIR = "./compiled"
@@ -225,24 +227,25 @@ REGTYPE = \
 ]
 
 import time
-from md5 import md5
+from hashlib import md5
 import os
 import subprocess
 import tempfile
 import math
 import binascii
-import struct
 
 def xlong(s):
-    return sum([ord(c) << (11-e)*8 for e,c in enumerate(s)])
+    return sum([c << (11-e)*8 for e,c in enumerate(s)])
 
 def rxstr(x,l):
-    return chr((x>>(11*8))&255) + rxstr(x << 8,l+1) if l<12 else ''
+	return [((x>>(11*8))&255)] + rxstr(x << 8,l+1) if l<12 else []
 
 def xstr(x):
-	return rxstr(x,0)
+	return bytes(rxstr(x,0))
 
-print "%s %s" % (SCRIPT_NAME, SCRIPT_VERSION)
+os.chdir(os.path.dirname(os.path.abspath(__file__))) # .py path in working dir
+
+print("%s %s" % (SCRIPT_NAME, SCRIPT_VERSION))
 
 swizzles=\
 [
@@ -381,7 +384,7 @@ for op in OPS:
 
 		argidx=argidx+1
 
-		tmpfile=open('__tmp__.psa','wb')
+		tmpfile=open('__tmp__.psa','w')
 		
 		tmpfile.write('xps_3_0\n')
 
@@ -395,7 +398,9 @@ for op in OPS:
 		tmpfile.close()
 
 		outname=OUTPUT_DIR+'/'+stmt+'.bin'
-		out=os.tmpfile()
+
+		outi, outn=tempfile.mkstemp()
+		out = open(outi, "r")
 
 		subprocess.call(SHADER_COMPILER+" \""+tmpfile.name+"\" asm -o \""+outname+"\" -a -d -cv",stdout=out)
 
@@ -406,7 +411,7 @@ for op in OPS:
 
 		compiled='- Compiled!' in  outs
 
-		print stmt,'\t\t\t',
+		print(stmt,'\t\t\t',)
 
 		if not compiled:
 			print
@@ -416,7 +421,7 @@ for op in OPS:
 
 		outsize=os.fstat(out.fileno()).st_size;
 
-		print "Valid!"
+		print("Valid!")
 
 		out.seek(-48,os.SEEK_END)
 
@@ -428,7 +433,7 @@ for op in OPS:
 		assert(current==check)
 		
 		if curswiz==-1 and curmask==-1 and curarg==-1:
-#			print "ref %024x"%current
+#			print("ref %024x" % current)
 			reference=current;
 			outops.append([op[0],reference,argtype,[],[],-1,-1])
 			continue
@@ -439,7 +444,7 @@ for op in OPS:
 		start=-1;
 		regplace=[]
 
-#		print "%024x"%current
+#		print("%024x" % current)
 
 		if curswiz!=-1:
 			prevbit=0;
@@ -495,11 +500,11 @@ for op in OPS:
 				prevbit=bit
 
 	for oo in outops[outopslastidx+1:]:
-		print oo
+		print(oo)
 
 	outopslastidx=len(outops)-1
 
-print "Step 1 done!"
+print("Step 1 done!")
 
 # generate c code
 
@@ -508,16 +513,16 @@ C_OPTYPE=['XEMO_SEQUENCER','XEMO_ALU_VECTOR','XEMO_ALU_VECTOR_SAT','XEMO_ALU_SCA
 
 cfile=open(OUTPUT_C_FILE,'w')
 
-print>>cfile,'// generated with %s %s (%s)' % (SCRIPT_NAME,SCRIPT_VERSION,__file__)
-print>>cfile
-print>>cfile,'#include "xemitops.h"'
-print>>cfile
-print>>cfile,'struct xemit_op_s xemit_ops[%d]=' % (len(outops)+1)
-print>>cfile,'{'
+print('// generated with %s %s (%s)' % (SCRIPT_NAME,SCRIPT_VERSION,__file__), end="\n", file=cfile)
+print(end="\n", file=cfile)
+print('#include "xemitops.h"', end="\n", file=cfile)
+print(end="\n", file=cfile)
+print('struct xemit_op_s xemit_ops[%d]=' % (len(outops)+1), end="\n", file=cfile)
+print('{', end="\n", file=cfile)
 for oo in outops:
-	print>>cfile,'\t{',
+	print('\t{', end="", file=cfile)
 
-	print>>cfile,'"'+oo[0]+'",',
+	print(' "'+oo[0]+'",', end="", file=cfile)
 
 	ot=-1;
 
@@ -526,66 +531,67 @@ for oo in outops:
 			ot=o[2];
 			break
 			
-	print>>cfile,"%s,"%(C_OPTYPE[ot]),
+	print(" %s, "%(C_OPTYPE[ot]), end="", file=cfile)
 
-	print>>cfile,'{',
-	for i in struct.unpack('BBBBBBBBBBBB',xstr(oo[1])):
-		print>>cfile,'0x%x,'%(i),
-	print>>cfile,'},',
+	print('{', end="", file=cfile)
+	for i in xstr(oo[1]):
+		print(' 0x%x,'%(i), end="", file=cfile)
+	print(' }, ', end="", file=cfile)
 
-	print>>cfile,'{',oo[5],',',oo[6],'},',
+	print('{',oo[5],',',oo[6],'},', end="", file=cfile)
 
-	print>>cfile,'{'
+	print(' {', end="\n", file=cfile)
 	for ri in range(4):
-		print>>cfile,'\t\t{',
+		print('\t\t{ ', end="", file=cfile)
 
 		if ri<len(oo[2]):
-			print>>cfile,C_REGTYPE[oo[2][ri]],',',
+			print(C_REGTYPE[oo[2][ri]],',', end="", file=cfile)
 
-			print>>cfile,'{',
+			print(' {', end="", file=cfile)
 			rmi=-1
 			for rm in oo[3]:
 				if rm[0]==ri:
 					rmi=rmi+1
-					print>>cfile,'{',rm[1],',',rm[2],'},',
+					print(' {',rm[1],',',rm[2],'},', end="", file=cfile)
 			if rmi<1:
-				print>>cfile,'{',-1,',',-1,'},',
-			print>>cfile,'},',
+				print(' {',-1,',',-1,'},', end="", file=cfile)
+			print(' }, ', end="", file=cfile)
 
 			if ot!=5: # TODO: no swizzles for fetches for now (different format)
 				for op in OPS:
 					if op[0]==oo[0]:
-						print>>cfile,op[1][ri],',',
+						print(op[1][ri],',', end="", file=cfile)
 						break;
 			else:
-				print>>cfile,'0',',',
+				print('0 ,', end="", file=cfile)
 
-			print>>cfile,'{',
+			print(' {', end="", file=cfile)
 			swi=-1
 			for sw in oo[4]:
 				if sw[0]==ri:
 					swi=swi+1
-					print>>cfile,'{',sw[1],',',sw[2],'},',
+					print(' {',sw[1],',',sw[2],'},', end="", file=cfile)
 
 					if ot!=1: # TODO: double swizzle only for alu vector
 						break
 			if swi<0:
-				print>>cfile,'{',-1,',',-1,'},',
+				print(' {',-1,',',-1,'},', end="", file=cfile)
 			if swi<1:
-				print>>cfile,'{',-1,',',-1,'},',
-			print>>cfile,'},',
+				print(' {',-1,',',-1,'},', end="", file=cfile)
+			print(' },', end="", file=cfile)
 		else:
-			print>>cfile,'XEMR_NONE',
+			print('XEMR_NONE', end="", file=cfile)
 
 
-		print>>cfile,'},'
-	print>>cfile,'\t},',
+		print(' },', end="\n", file=cfile)
+	print('\t}, ', end="", file=cfile)
 
-	print>>cfile,'},'
+	print('},', end="\n", file=cfile)
 
-print>>cfile,'\t{NULL}'
-print>>cfile,'};\n'
+print('\t{NULL}', end="\n", file=cfile)
+print('};', end="\n", file=cfile)
+print(end="\n", file=cfile)
 
 cfile.close()
 
-print "All done!"
+print("All done!")
